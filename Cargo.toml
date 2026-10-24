@@ -1,0 +1,47 @@
+[workspace]
+members = ["crates/*"]
+resolver = "2"
+
+[workspace.lints.rust]
+unsafe_code = "deny"
+missing_docs = "warn"
+
+[workspace.lints.clippy]
+unwrap_used = "deny"
+expect_used = "deny"
+panic = "deny"
+exit = "deny"
+modulo_arithmetic = "warn"
+redundant_clone = "warn"
+unused_async = "warn"
+if_not_else = "warn"
+cognitive_complexity = "allow"
+too_many_arguments = "warn"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.95"
+authors = ["Wyatt Au"]
+license = "Apache-2.0"
+description = "Business-trend crawler: SEC EDGAR M&A and funding signals, scored into an investment-by-risk idea taxonomy"
+repository = "https://github.com/WyattAu/bizkit"
+homepage = "https://github.com/WyattAu/bizkit"
+readme = "README.md"
+keywords = ["edgar", "sec", "ma", "business-trends", "private-equity"]
+categories = ["command-line-utilities", "finance"]
+
+[workspace.dependencies]
+bizkit-core = { path = "crates/bizkit-core", version = "0.1.0" }
+fetch-kit = "0.2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "2"
+tracing = "0.1"
+rusqlite = { version = "0.40", features = ["bundled"] }
+clap = { version = "4", features = ["derive"] }
+tokio = { version = "1", features = ["rt-multi-thread", "macros"] }
+anyhow = "1"
+
+[profile.release]
+lto = "thin"
