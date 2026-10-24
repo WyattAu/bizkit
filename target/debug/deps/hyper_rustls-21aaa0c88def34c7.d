@@ -1,0 +1,11 @@
+/home/wyatt/dev/src/github.com/WyattAu/bizkit/target/debug/deps/hyper_rustls-21aaa0c88def34c7.d: /home/wyatt/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/hyper-rustls-0.27.10/src/lib.rs /home/wyatt/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/hyper-rustls-0.27.10/src/config.rs /home/wyatt/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/hyper-rustls-0.27.10/src/connector.rs /home/wyatt/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/hyper-rustls-0.27.10/src/connector/builder.rs /home/wyatt/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/hyper-rustls-0.27.10/src/stream.rs
+
+/home/wyatt/dev/src/github.com/WyattAu/bizkit/target/debug/deps/libhyper_rustls-21aaa0c88def34c7.rlib: /home/wyatt/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/hyper-rustls-0.27.10/src/lib.rs /home/wyatt/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/hyper-rustls-0.27.10/src/config.rs /home/wyatt/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/hyper-rustls-0.27.10/src/connector.rs /home/wyatt/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/hyper-rustls-0.27.10/src/connector/builder.rs /home/wyatt/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/hyper-rustls-0.27.10/src/stream.rs
+
+/home/wyatt/dev/src/github.com/WyattAu/bizkit/target/debug/deps/libhyper_rustls-21aaa0c88def34c7.rmeta: /home/wyatt/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/hyper-rustls-0.27.10/src/lib.rs /home/wyatt/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/hyper-rustls-0.27.10/src/config.rs /home/wyatt/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/hyper-rustls-0.27.10/src/connector.rs /home/wyatt/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/hyper-rustls-0.27.10/src/connector/builder.rs /home/wyatt/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/hyper-rustls-0.27.10/src/stream.rs
+
+/home/wyatt/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/hyper-rustls-0.27.10/src/lib.rs:
+/home/wyatt/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/hyper-rustls-0.27.10/src/config.rs:
+/home/wyatt/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/hyper-rustls-0.27.10/src/connector.rs:
+/home/wyatt/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/hyper-rustls-0.27.10/src/connector/builder.rs:
+/home/wyatt/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/hyper-rustls-0.27.10/src/stream.rs:

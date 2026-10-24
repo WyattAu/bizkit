@@ -143,6 +143,28 @@ fn percent_encode(s: &str) -> String {
     out
 }
 
+/// Parse an EDGAR FTS JSON body into hits (exposed for tests).
+///
+/// # Errors
+/// Fails when the payload is not the FTS shape.
+pub fn parse_fts_json(body: &str) -> Result<Vec<FilingHit>> {
+    let value: FtsResponse =
+        serde_json::from_str(body).map_err(|e| BizError::Edgar(format!("fts parse: {e}")))?;
+    Ok(value
+        .hits
+        .hits
+        .into_iter()
+        .map(|h| FilingHit {
+            cik: h.source.ciks.first().cloned().unwrap_or_default(),
+            display_name: h.source.display_names.first().cloned().unwrap_or_default(),
+            form: h.source.file_type.unwrap_or_default(),
+            period_ending: h.source.period_ending.unwrap_or_default(),
+            doc: h.id,
+            score: h.score,
+        })
+        .collect())
+}
+
 #[cfg(test)]
 mod tests {
     #![allow(clippy::unwrap_used, clippy::expect_used, clippy::panic)]
@@ -196,26 +218,4 @@ mod tests {
         assert_eq!(percent_encode("acquisition"), "acquisition");
         assert_eq!(percent_encode("a&b"), "a%26b");
     }
-}
-
-/// Parse an EDGAR FTS JSON body into hits (exposed for tests).
-///
-/// # Errors
-/// Fails when the payload is not the FTS shape.
-pub fn parse_fts_json(body: &str) -> Result<Vec<FilingHit>> {
-    let value: FtsResponse =
-        serde_json::from_str(body).map_err(|e| BizError::Edgar(format!("fts parse: {e}")))?;
-    Ok(value
-        .hits
-        .hits
-        .into_iter()
-        .map(|h| FilingHit {
-            cik: h.source.ciks.first().cloned().unwrap_or_default(),
-            display_name: h.source.display_names.first().cloned().unwrap_or_default(),
-            form: h.source.file_type.unwrap_or_default(),
-            period_ending: h.source.period_ending.unwrap_or_default(),
-            doc: h.id,
-            score: h.score,
-        })
-        .collect())
 }
