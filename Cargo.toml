@@ -19,7 +19,7 @@ cognitive_complexity = "allow"
 too_many_arguments = "warn"
 
 [workspace.package]
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 rust-version = "1.95"
 authors = ["Wyatt Au"]
@@ -32,7 +32,7 @@ keywords = ["edgar", "sec", "ma", "business-trends", "private-equity"]
 categories = ["command-line-utilities", "finance"]
 
 [workspace.dependencies]
-bizkit-core = { path = "crates/bizkit-core", version = "0.1.0" }
+bizkit-core = { path = "crates/bizkit-core", version = "0.1.2" }
 fetch-kit = "0.2"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
