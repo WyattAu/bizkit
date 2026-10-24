@@ -292,3 +292,94 @@ mod tests {
         }
     }
 }
+
+/// SIC code division → business sector (top-level).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub enum Sector {
+    /// Agriculture, Forestry, Fishing (01-09)
+    Agriculture,
+    /// Mining, Oil & Gas (10-14)
+    Mining,
+    /// Construction (15-17)
+    Construction,
+    /// Manufacturing (20-39)
+    Manufacturing,
+    /// Transport, Communications, Utilities (40-49)
+    Transport,
+    /// Wholesale Trade (50-51)
+    Wholesale,
+    /// Retail Trade (52-59)
+    Retail,
+    /// Finance, Insurance, Real Estate (60-67)
+    Finance,
+    /// Services incl. Software (70-89, 91-97)
+    Services,
+    /// Public Administration (91-99)
+    PublicAdmin,
+    /// Unclassified
+    Other,
+}
+
+impl Sector {
+    /// Map a SIC division code (first 2 digits) to a business sector.
+    #[must_use]
+    pub fn from_division(code: u32) -> Sector {
+        match code {
+            1..=9 => Sector::Agriculture,
+            10..=14 => Sector::Mining,
+            15..=17 => Sector::Construction,
+            20..=39 => Sector::Manufacturing,
+            40..=49 => Sector::Transport,
+            50..=51 => Sector::Wholesale,
+            52..=59 => Sector::Retail,
+            60..=67 => Sector::Finance,
+            70..=89 | 91..=97 => Sector::Services,
+            _ => Sector::Other,
+        }
+    }
+
+    /// Display string.
+    #[must_use]
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Sector::Agriculture => "Agriculture",
+            Sector::Mining => "Mining",
+            Sector::Construction => "Construction",
+            Sector::Manufacturing => "Manufacturing",
+            Sector::Transport => "Transport",
+            Sector::Wholesale => "Wholesale",
+            Sector::Retail => "Retail",
+            Sector::Finance => "Finance",
+            Sector::Services => "Services",
+            Sector::PublicAdmin => "Public Administration",
+            Sector::Other => "Other",
+        }
+    }
+}
+
+impl std::fmt::Display for Sector {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(self.as_str())
+    }
+}
+
+/// Add `Other` variant for unmapped SIC codes.
+impl Sector {
+    /// See [`Sector::as_str`].
+    #[must_use]
+    pub fn all() -> [Sector; 11] {
+        [
+            Sector::Agriculture,
+            Sector::Mining,
+            Sector::Construction,
+            Sector::Manufacturing,
+            Sector::Transport,
+            Sector::Wholesale,
+            Sector::Retail,
+            Sector::Finance,
+            Sector::Services,
+            Sector::PublicAdmin,
+            Sector::Other,
+        ]
+    }
+}
