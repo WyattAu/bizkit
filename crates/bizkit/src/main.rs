@@ -39,6 +39,19 @@ enum Command {
         #[arg(long, default_value = "bizkit.db")]
         db: PathBuf,
     },
+    /// Run the curated daily M&A watch: fixed queries over a rolling
+    /// window, recorded into the store (deduped on filing id).
+    Watch {
+        /// Rolling window in days back from today.
+        #[arg(long, default_value_t = 14)]
+        window: i64,
+        /// Max hits per query.
+        #[arg(long, default_value_t = 100)]
+        limit: usize,
+        /// SQLite store path.
+        #[arg(long, default_value = "bizkit.db")]
+        db: PathBuf,
+    },
     /// Report filings by form type and top repeat filers.
     Report {
         /// SQLite store path.
@@ -93,6 +106,46 @@ async fn main() -> Result<()> {
                 .context("record filings failed")?;
             println!("stored {stored} filings into {db:?}");
         }
+        Command::Watch { window, limit, db } => {
+            // The curated M&A watchlist: phrase plus form filter, one pass
+            // per day from the fleet timer. Three queries stays inside the
+            // SEC fair-access policy.
+            const WATCHLIST: [(&str, &str); 3] = [
+                ("\"merger agreement\"", "8-K,DEFM14A,425,S-4"),
+                ("\"acquisition of\"", "8-K,DEFM14A,425,S-4,SC 13D,SC 13G"),
+                ("\"tender offer\"", "SC TO-T,SC 14D9,425,8-K"),
+            ];
+            let client = EdgarClient::new();
+            let store = Store::open(&db).context("open store")?;
+            let now = std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .map(|d| d.as_secs() as i64)
+                .unwrap_or(0);
+            let enddt = iso_days_from_epoch(now);
+            let startdt = iso_days_from_epoch(now - window * 86_400);
+            let mut total_stored = 0usize;
+            for (phrase, forms) in WATCHLIST {
+                let query = FtsQuery {
+                    q: phrase.to_string(),
+                    forms: Some(forms.to_string()),
+                    startdt: startdt.clone(),
+                    enddt: enddt.clone(),
+                };
+                let hits = client
+                    .search(&query, limit)
+                    .await
+                    .with_context(|| format!("edgar search failed: {phrase}"))?;
+                let stored = store.record_filings(&hits, phrase, now)?;
+                total_stored += stored;
+                println!(
+                    "{phrase}: {} hits, {stored} new -> {}",
+                    hits.len(),
+                    db.display()
+                );
+                tokio::time::sleep(std::time::Duration::from_millis(400)).await;
+            }
+            println!("watch complete: {total_stored} new filings, window {startdt}..{enddt}");
+        }
         Command::Report { db, top } => {
             let store = Store::open(&db).context("open store")?;
             println!("=== filings by form ===");
@@ -131,4 +184,21 @@ async fn main() -> Result<()> {
         }
     }
     Ok(())
+}
+
+/// Unix seconds as `YYYY-MM-DD` (UTC). Hinnant's civil_from_days; no
+/// date crate pulled in for one string.
+fn iso_days_from_epoch(secs: i64) -> String {
+    let days = secs.div_euclid(86_400);
+    let z = days + 719_468;
+    let era = z.div_euclid(146_097);
+    let doe = z - era * 146_097;
+    let yoe = (doe - doe / 1460 + doe / 36_524 - doe / 146_096) / 365;
+    let y = yoe + era * 400;
+    let doy = doe - (365 * yoe + yoe / 4 - yoe / 100);
+    let mp = (5 * doy + 2) / 153;
+    let d = doy - (153 * mp + 2) / 5 + 1;
+    let m = if mp < 10 { mp + 3 } else { mp - 9 };
+    let y = if m <= 2 { y + 1 } else { y };
+    format!("{y:04}-{m:02}-{d:02}")
 }
